@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetScan Pro: Local Animal Health Risk</title>
-    <!-- Load Tailwind CSS for modern styling and responsiveness -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>PetScan Pro: Local Animal Health Risk & Photo Analysis</title>
+    
+
+<script src="https://cdn.tailwindcss.com"></script>
     
     <style>
         /* Custom styles for appearance */
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f8ff 0%, #e0e7ff 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e0e7ff 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column; 
             padding-top: 4.5rem; /* Space for fixed navbar */
         }
         .container-card {
-            box-shadow: 0 20px 50px rgba(17, 24, 39, 0.15);
+            box-shadow: 0 10px 30px rgba(27, 31, 46, 0.1);
             transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(0);
         }
         .input-box {
             transition: all 0.3s ease-in-out;
@@ -50,21 +52,14 @@
         }
 
         /* --- Custom Animations for Home Page "WOW" factor --- */
-        @keyframes float-move {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(20px, -10px) scale(1.05); }
-            100% { transform: translate(0, 0) scale(1); }
+        @keyframes pulse-shadow {
+            0% { box-shadow: 0 10px 20px rgba(66, 153, 225, 0.3); }
+            50% { box-shadow: 0 15px 30px rgba(66, 153, 225, 0.5); }
+            100% { box-shadow: 0 10px 20px rgba(66, 153, 225, 0.3); }
         }
-
-        .floating-blob-1 {
-            background: rgba(59, 130, 246, 0.15); /* Blue */
-            animation: float-move 10s ease-in-out infinite alternate;
-            filter: blur(50px);
-        }
-        .floating-blob-2 {
-            background: rgba(168, 85, 247, 0.15); /* Purple */
-            animation: float-move 12s ease-in-out infinite reverse;
-            filter: blur(60px);
+        
+        .hero-card {
+            animation: pulse-shadow 4s ease-in-out infinite alternate;
         }
 
         /* Loading Spinner Animation */
@@ -99,117 +94,122 @@
             padding-top: 0;
         }
         .collapsible-content.open {
-            max-height: 500px; /* Needs to be larger than content height */
+            max-height: 1000px; /* Needs to be larger than content height */
             padding-top: 0.75rem; /* pt-3 */
+        }
+        
+        /* File Upload Styles */
+        #imagePreviewContainer {
+            min-height: 200px;
+            border: 2px dashed #ccc;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+        #imagePreview {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
     </style>
 </head>
 <body class="p-0">
 
-    <!-- NAVBAR -->
-    <nav class="fixed top-0 left-0 w-full bg-white shadow-lg z-50">
+    
+
+<nav class="fixed top-0 left-0 w-full bg-white shadow-xl z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo/Title -->
-                <div class="flex-shrink-0">
-                    <button onclick="showPage('home-page')" class="text-2xl font-bold text-blue-700 hover:text-blue-500 transition-colors">
+                
+
+<div class="flex-shrink-0">
+                    <button onclick="showPage('home-page')" class="text-2xl font-extrabold text-blue-700 hover:text-blue-500 transition-colors tracking-wide">
                         PetScan Pro
                     </button>
                 </div>
-                <!-- Navigation Links - MAP LINK REMOVED -->
-                <div class="flex space-x-2 sm:space-x-4">
+                
+
+<div class="flex space-x-1 sm:space-x-2">
                     <button id="nav-home-page" onclick="showPage('home-page')" class="nav-link text-gray-600 hover:text-blue-600 font-medium px-3 py-2 rounded-md transition-colors">Home</button>
                     <button id="nav-scanner-page" onclick="showPage('scanner-page')" class="nav-link text-gray-600 hover:text-blue-600 font-medium px-3 py-2 rounded-md transition-colors">Scanner</button>
-                    <button id="nav-about-us-page" onclick="showPage('about-us-page')" class="nav-link text-gray-600 hover:text-blue-600 font-medium px-3 py-2 rounded-md transition-colors">About Us</button>
+                    <button id="nav-upload-page" onclick="showPage('upload-page')" class="nav-link text-gray-600 hover:text-blue-600 font-medium px-3 py-2 rounded-md transition-colors">File Upload</button>
+                    <button id="nav-about-us-page" onclick="showPage('about-us-page')" class="nav-link text-gray-600 hover:text-blue-600 font-medium px-3 py-2 rounded-md transition-colors hidden sm:block">About Us</button>
                 </div>
             </div>
         </div>
     </nav>
     
-    <!-- MAIN CONTENT WRAPPER -->
-    <main class="flex-grow p-4 flex justify-center w-full">
+    
+
+<main class="flex-grow p-4 flex justify-center w-full">
         <div class="w-full max-w-xl">
 
-            <!-- HOME PAGE -->
-            <div id="home-page" class="container-card w-full bg-white p-6 md:p-10 mt-4 rounded-3xl relative overflow-hidden">
-                
-                <!-- Animated Background Blobs -->
-                <div class="floating-blob-1 absolute w-64 h-64 rounded-full -top-10 -left-10 z-0 opacity-70"></div>
-                <div class="floating-blob-2 absolute w-72 h-72 rounded-full -bottom-10 -right-10 z-0 opacity-70"></div>
-                
+            
 
+<div id="home-page" class="container-card w-full bg-white p-6 md:p-10 mt-4 rounded-3xl relative overflow-hidden">
+                
                 <div class="relative z-10 text-center">
-                    <!-- Hero Section -->
-                    <div class="p-4 sm:p-8 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-xl mb-8">
-                        <svg class="w-16 h-16 mx-auto mb-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3-.895-3-2 1.343-2 3-2zM9 14h6m-6 2h6m-3-10a9 9 0 019 9c0 5.483-4.5 9.98-9 9.98S3 17.483 3 12a9 9 0 019-9z"></path></svg>
-                        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
-                            Veterinary Public Health Risk Assessment
+                    
+
+<div class="p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-indigo-600 to-blue-800 text-white shadow-2xl mb-10 hero-card">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-indigo-200 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2-3-.895-3-2 1.343-2 3-2zM9 14h6m-6 2h6m-3-10a9 9 0 019 9c0 5.483-4.5 9.98-9 9.98S3 17.483 3 12a9 9 0 019-9z"></path></svg>
+                        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">
+                            AI-Powered Pet Health Intelligence
                         </h1>
-                        <p class="text-lg font-light text-blue-200">
-                            Proactively protect your pet using real-time, localized disease data.
+                        <p class="text-lg font-light text-indigo-200">
+                            Check local disease risks or analyze photos for potential conditions—instant, actionable insights for your companion.
                         </p>
                     </div>
                     
-                    <!-- Call to Action -->
-                    <div class="mb-10">
-                        <p class="text-xl font-medium leading-relaxed text-gray-700 mb-6">
-                            Enter your location and pet type to instantly check for **active local outbreaks, parasitic threats, and environmental risks.**
-                        </p>
-                        <button onclick="showPage('scanner-page')" class="btn-primary w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-2xl flex items-center justify-center text-xl transition-all duration-300 transform hover:scale-[1.01] tracking-wider">
-                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                            Run Local Risk Scan Now
-                        </button>
-                    </div>
-
-                    <!-- Statistics / Trust Section -->
-                    <div class="grid grid-cols-3 gap-4 text-gray-800 border-t pt-6 mt-6 border-gray-200">
-                        <div class="p-3 rounded-lg bg-gray-50">
-                            <p class="text-3xl font-extrabold text-blue-700">100+</p>
-                            <p class="text-xs font-semibold uppercase text-gray-500 mt-1">Verified Sources</p>
-                        </div>
-                        <div class="p-3 rounded-lg bg-gray-50">
-                            <p class="text-3xl font-extrabold text-blue-700">Live</p>
-                            <p class="text-xs font-semibold uppercase text-gray-500 mt-1">Data Grounding</p>
-                        </div>
-                        <div class="p-3 rounded-lg bg-gray-50">
-                            <p class="text-3xl font-extrabold text-blue-700">4+</p>
-                            <p class="text-xs font-semibold uppercase text-gray-500 mt-1">Pet Species</p>
-                        </div>
-                    </div>
                     
-                    <!-- Core Services (Features integrated) -->
-                    <h2 class="text-2xl font-extrabold text-gray-800 text-center mt-12 mb-6">How We Keep Your Pet Safe</h2>
-                    <div class="space-y-6">
-                        <!-- Feature 1: Localized Data -->
-                        <div class="flex items-start space-x-4 p-4 border border-gray-100 rounded-xl bg-green-50 shadow-sm">
-                            <svg class="w-8 h-8 flex-shrink-0 text-green-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-800">Hyper-Local Risk Assessment</h3>
-                                <p class="text-gray-600">We analyze data specific to your **city or area** to identify relevant disease outbreaks and localized threats, offering maximum accuracy.</p>
-                            </div>
-                        </div>
 
-                        <!-- Feature 2: Real-Time Grounding -->
-                        <div class="flex items-start space-x-4 p-4 border border-gray-100 rounded-xl bg-blue-50 shadow-sm">
-                            <svg class="w-8 h-8 flex-shrink-0 text-blue-600 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-800">AI-Powered Data Synthesis</h3>
-                                <p class="text-gray-600">We use AI, grounded by Google Search, to instantly analyze vast veterinary public health reports and synthesize them into a concise, actionable report.</p>
-                            </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                        
+                        
+
+<div class="p-6 bg-blue-50 border border-blue-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                            <svg class="w-8 h-8 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <h2 class="text-xl font-bold text-gray-800 mb-2">Local Risk Scanner</h2>
+                            <p class="text-gray-600 text-sm mb-4">Check for active parasitic threats and disease outbreaks based on your city or area.</p>
+                            <button onclick="showPage('scanner-page')" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl text-sm">
+                                Go to Scanner
+                            </button>
+                        </div>
+                        
+                        
+
+<div class="p-6 bg-blue-50 border border-blue-200 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                            <svg class="w-8 h-8 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.218A2 2 0 0110.424 4h3.152a2 2 0 011.664.89l.812 1.218A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <h2 class="text-xl font-bold text-gray-800 mb-2">Photo Diagnostics</h2>
+                            <p class="text-gray-600 text-sm mb-4">Upload an image (e.g., a skin condition, injury) for an AI-powered preliminary assessment.</p>
+                            <button onclick="showPage('upload-page')" class="btn-primary w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl text-sm">
+                                Upload Photo
+                            </button>
                         </div>
                     </div>
+
+                    
+
+<p class="text-sm text-gray-500 mt-6 pt-4 border-t border-gray-100 italic">
+                        PetScan Pro provides informative assistance and is not a substitute for professional veterinary care. Always consult a veterinarian for health decisions.
+                    </p>
                 </div>
             </div>
 
-            <!-- SCANNER PAGE (City/Area Input) -->
-            <div id="scanner-page" class="container-card w-full bg-white p-6 md:p-10 mt-4 rounded-3xl hidden opacity-0">
+            
+
+<div id="scanner-page" class="container-card w-full bg-white p-6 md:p-10 mt-4 rounded-3xl hidden opacity-0">
                 <h1 class="text-3xl font-extrabold text-center text-blue-700 mb-2">City/Area Risk Assessment</h1>
                 <p class="text-center text-sm text-gray-500 mb-8">
                     Enter your location and animal type to get a personalized report.
                 </p>
 
-                <!-- Input Form -->
-                <div class="space-y-6">
+                
+
+<div class="space-y-6">
                     <div>
                         <label for="locationInput" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
                             <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -238,15 +238,57 @@
                     </button>
                 </div>
 
-                <!-- Results Area -->
-                <div id="results" class="mt-10 pt-6 border-t border-blue-100">
-                    <!-- Results will appear here -->
-                    <p class="text-center text-gray-500 italic p-4">Enter your details and click 'Check Risk' to generate a report.</p>
+                
+
+<div id="results" class="mt-10 pt-6 border-t border-blue-100">
+                    
+
+<p class="text-center text-gray-500 italic p-4">Enter your details and click 'Check Risk' to generate a report.</p>
                 </div>
             </div>
 
-            <!-- ABOUT US PAGE -->
-            <div id="about-us-page" class="container-card w-full bg-white p-8 md:p-12 mt-4 rounded-3xl hidden opacity-0">
+            
+
+<div id="upload-page" class="container-card w-full bg-white p-6 md:p-10 mt-4 rounded-3xl hidden opacity-0">
+                <h1 class="text-3xl font-extrabold text-center text-blue-700 mb-2">Photo Analysis</h1>
+                <p class="text-center text-sm text-gray-500 mb-8">
+                    Upload an image for an AI assessment of potential conditions.
+                </p>
+
+                <div class="space-y-6">
+                    <div>
+                        <label for="imageUpload" class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Select Image File
+                        </label>
+                        <input type="file" id="imageUpload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                    </div>
+
+                    
+
+<div id="imagePreviewContainer" class="p-4">
+                        <img id="imagePreview" src="" alt="Image Preview" class="hidden">
+                        <p id="imagePlaceholder" class="text-gray-400">Preview will appear here</p>
+                    </div>
+
+                    <button id="analyzeButton" onclick="analyzeImageForDisease()" class="btn-check w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center" disabled>
+                        Analyze Photo for Condition
+                    </button>
+                </div>
+
+                
+
+<div id="analysisResults" class="mt-10 pt-6 border-t border-blue-100">
+                    
+
+<p class="text-center text-gray-500 italic p-4">Upload an image (e.g., skin rash, paw injury, visible symptom) and click 'Analyze'.</p>
+                </div>
+            </div>
+
+
+            
+
+<div id="about-us-page" class="container-card w-full bg-white p-8 md:p-12 mt-4 rounded-3xl hidden opacity-0">
                 <h2 class="text-3xl font-extrabold text-center text-indigo-700 mb-8">Our Mission: Proactive Pet Health</h2>
                 
                 <div class="space-y-6 text-gray-700">
@@ -260,7 +302,7 @@
                     </div>
                     <h3 class="text-xl font-bold pt-4 text-blue-600">How It Works</h3>
                     <p>
-                        We utilize Google Search grounding to scan reputable sources, including government reports, university veterinary journals, and local health alerts, specifically focusing on the geographic region and animal type you provide. This ensures that the risk assessment is not only accurate but also **highly localized and current.**
+                        We utilize Google Search grounding to scan reputable sources, including government reports, university veterinary journals, and local health alerts, specifically focusing on the geographic region and animal type you provide. For the **File Upload** feature, we use multimodal AI to analyze the visual information in your photo against known veterinary conditions, offering a preliminary diagnostic hypothesis.
                     </p>
                     <h3 class="text-xl font-bold pt-4 text-blue-600">The Team</h3>
                     <p>
@@ -272,8 +314,9 @@
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-gray-800 text-white mt-12 py-8">
+    
+
+<footer class="bg-gray-800 text-white mt-12 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:flex md:justify-between md:items-center">
             <div class="mb-4 md:mb-0">
                 <h4 class="text-xl font-semibold">PetScan Pro</h4>
@@ -292,17 +335,18 @@
 
     <script>
         // --- 1. State and UI Control ---
-        // 'map-page' has been removed from the application
-        const ALL_PAGES = ['home-page', 'scanner-page', 'about-us-page']; 
+        const ALL_PAGES = ['home-page', 'scanner-page', 'upload-page', 'about-us-page']; 
 
         document.addEventListener('DOMContentLoaded', () => {
             showPage('home-page');
+            document.getElementById('imageUpload').addEventListener('change', previewImage);
         });
 
         /**
          * Simple single-page routing logic with a fade transition and active link highlighting.
+         * Explicitly attach to window to ensure accessibility from inline onclick handlers.
          */
-        function showPage(pageId) {
+        window.showPage = function(pageId) {
             ALL_PAGES.forEach(id => {
                 const page = document.getElementById(id);
                 const navLink = document.getElementById(`nav-${id}`);
@@ -344,12 +388,15 @@
                 button.classList.toggle('rotate-180');
             }
         }
+        
+        // Helper function to display messages to the user.
+        function displayMessage(element, message, classString) {
+            element.innerHTML = `<p class="p-4 text-center rounded-xl border ${classString} font-medium">${message}</p>`;
+        }
 
         // --- 2. Gemini API Configuration ---
         const apiKey = "AIzaSyDXnxB5iafTlL4aXRf-8miti7Lrd1aKahE"; // API key is automatically provided in this environment
         const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent';
-
-        // --- 3. Core Functions ---
 
         /**
          * Generic fetch utility with exponential backoff for resilience.
@@ -373,6 +420,8 @@
             }
         }
 
+        // --- 3. Scanner Page Functions (Updated) ---
+        
         /**
          * Determines the color and label for the risk badge.
          */
@@ -433,9 +482,6 @@
 
         /**
          * Fetches disease data using Gemini API with Google Search grounding.
-         * @param {string} animal - The type of animal (e.g., 'cat').
-         * @param {string} location - The location (city name).
-         * @param {string} resultsDivId - The ID of the div to display results in ('results').
          */
         async function getDiseaseRisk(animal, location, resultsDivId) {
             const resultsDiv = document.getElementById(resultsDivId);
@@ -447,9 +493,7 @@
             
             // Clear old results and show loading
              resultsDiv.innerHTML = `<p class="p-4 text-center rounded-xl border bg-blue-50 text-blue-700 border-blue-300 font-medium flex items-center justify-center">
-                                            <svg class="spinner" viewBox="0 0 50 50">
-                                            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
-                                            </svg>
+                                            <span class="spinner"></span>
                                             <span class="ml-2">Scanning Location: ${location}...</span>
                                         </p>`;
 
@@ -548,14 +592,16 @@
                                     <p class="text-gray-600 text-sm leading-relaxed">${d.description.replace('Treatment & Prevention:', '')}</p>
                                 </div>
 
-                                <!-- Collapsible Action Button -->
-                                <button onclick="toggleDetails('${collapseId}')" class="flex justify-between items-center w-full p-4 bg-gray-50 hover:bg-gray-100 transition-colors duration-200 border-t border-gray-200">
+                                
+
+<button onclick="toggleDetails('${collapseId}')" class="flex justify-between items-center w-full p-4 bg-gray-50 hover:bg-gray-100 transition-colors duration-200 border-t border-gray-200">
                                     <span class="text-base font-semibold text-blue-700">Recommended Action (Cure & Prevention)</span>
                                     <svg class="w-5 h-5 text-blue-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                 </button>
                                 
-                                <!-- Collapsible Content -->
-                                <div id="${collapseId}" class="collapsible-content hidden p-4 pt-0 bg-white border-t border-gray-100">
+                                
+
+<div id="${collapseId}" class="collapsible-content hidden p-4 pt-0 bg-white border-t border-gray-100">
                                     <div class="text-gray-700 text-sm leading-relaxed">
                                         <p class="font-bold mb-1 text-gray-800">Veterinary Advice:</p>
                                         ${d.treatment.split('\n').map(line => `<p class="mb-2">${line.trim()}</p>`).join('')}
@@ -597,8 +643,9 @@
 
         /**
          * Main function to handle user interaction from the manual form.
+         * Explicitly attach to window to ensure accessibility from inline onclick handlers.
          */
-        async function getDiseaseRiskFromForm() {
+        window.getDiseaseRiskFromForm = async function() {
             const locationInput = document.getElementById('locationInput').value.trim();
             const animalInput = document.getElementById('animalInput').value.trim();
             const resultsDiv = document.getElementById('results');
@@ -610,17 +657,190 @@
                 return;
             }
             
-            // Only using the 'results' div now
             await getDiseaseRisk(animalInput, locationInput, 'results');
         }
+        
+        // --- 4. File Upload Page Functions (NEW) ---
 
+        let base64Image = null;
+        let mimeType = null;
 
         /**
-         * Helper function to display messages to the user.
+         * Converts a File object to a Base64 string.
          */
-        function displayMessage(element, message, classString) {
-            element.innerHTML = `<p class="p-4 text-center rounded-xl border ${classString} font-medium">${message}</p>`;
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const base64String = reader.result.split(',')[1];
+                    resolve(base64String);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        /**
+         * Handles image preview and stores base64 for API call.
+         */
+        async function previewImage(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('imagePlaceholder');
+            const analyzeButton = document.getElementById('analyzeButton');
+            const analysisResults = document.getElementById('analysisResults');
+
+            analysisResults.innerHTML = ''; // Clear old results
+
+            if (file) {
+                try {
+                    // Update preview
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        preview.src = e.target.result;
+                        preview.classList.remove('hidden');
+                        placeholder.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Store data for API call
+                    base64Image = await fileToBase64(file);
+                    mimeType = file.type;
+                    analyzeButton.disabled = false;
+                    // Changed message background to blue
+                    displayMessage(analysisResults, `File ready for analysis: ${file.name}. Click 'Analyze Photo'.`, 'bg-blue-50 text-blue-700 border-blue-300');
+
+                } catch (error) { // FIX: Removed unexpected `< /div>` before catch
+                    console.error("Error reading file:", error);
+                    base64Image = null;
+                    mimeType = null;
+                    analyzeButton.disabled = true;
+                    displayMessage(analysisResults, 'Error processing file. Please try a different image.', 'bg-red-100 text-red-700 border-red-300');
+                }
+            } else {
+                preview.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                analyzeButton.disabled = true;
+                base64Image = null;
+                mimeType = null;
+            }
+        }
+
+        /**
+         * Calls the Gemini API to analyze the uploaded image for disease/condition.
+         * Explicitly attach to window to ensure accessibility from inline onclick handlers.
+         */
+        window.analyzeImageForDisease = async function() {
+            if (!base64Image || !mimeType) {
+                displayMessage(document.getElementById('analysisResults'), 'Please upload an image first.', 'bg-red-100 text-red-700 border-red-300');
+                return;
+            }
+
+            const resultsDiv = document.getElementById('analysisResults');
+            const analyzeButton = document.getElementById('analyzeButton');
+            
+            // Set loading state (Message color changed to blue)
+            analyzeButton.disabled = true;
+            analyzeButton.innerHTML = '<span class="spinner"></span> Analyzing Image...';
+            resultsDiv.innerHTML = `<p class="p-4 text-center rounded-xl border bg-blue-50 text-blue-700 border-blue-300 font-medium flex items-center justify-center">
+                                        <span class="spinner"></span>
+                                        <span class="ml-2">Uploading image for veterinary assessment...</span>
+                                    </p>`;
+
+            try {
+                const imageSystemPrompt = `You are a highly specialized Veterinary Image Diagnostics AI, expertly trained to identify potential animal health conditions from visual input. Your analysis should be thorough and clinically relevant, providing a *hypothetical* diagnosis and actionable advice.
+
+                                            Format your response strictly as follows:
+
+                                            **Disclaimer: This is an AI-generated hypothetical assessment, NOT a professional veterinary diagnosis. Always consult a licensed veterinarian for definitive diagnosis and treatment.**
+
+                                            ---
+
+                                            **Image Analysis Report**
+
+                                            **Observed Visual Cues:** [List specific, objective observations from the image that are relevant to potential conditions, e.g., 'Patches of inflamed red skin on the abdomen,' 'Swelling around the left eye,' 'Hair loss and scaling on the ears.']
+
+                                            **Potential Conditions (Top 3-5 Hypotheses):**
+
+                                            1.  **[Condition Name 1]:**
+                                                * **Likely Indication:** [Explain *why* this condition is suggested by the visual cues, linking symptoms directly to the disease. Be concise but informative.]
+                                                * **Recommended Urgent Action:** [Provide clear, immediate, practical steps an owner should take *before* a vet visit to manage the condition, ensure comfort, or prevent worsening. E.g., 'Gently clean the affected area with warm water,' 'Prevent the animal from scratching/licking using a cone,' 'Monitor for fever.']
+
+                                            2.  **[Condition Name 2]:**
+                                                * **Likely Indication:** [Explain *why* this condition is suggested by the visual cues.]
+                                                * **Recommended Urgent Action:** [Provide clear, immediate, practical steps.]
+
+                                            3.  **[Condition Name 3]:**
+                                                * **Likely Indication:** [Explain *why* this condition is suggested by the visual cues.]
+                                                * **Recommended Urgent Action:** [Provide clear, immediate, practical steps.]
+                                            
+                                            [Add more conditions if visually strongly indicated, up to 5.]
+
+                                            ---
+
+                                            **General Advice:** Ensure the animal has access to fresh water and a quiet, comfortable resting place. Document any changes in symptoms or behavior to share with your veterinarian. Do not administer any medications without veterinary guidance.`;
+
+                const userPrompt = "Analyze this animal image. What potential disease, injury, or skin condition is visible? Provide likely hypotheses and immediate action steps based on the visual evidence. Focus only on what is observable in the image.";
+
+                const payload = {
+                    contents: [
+                        {
+                            role: "user",
+                            parts: [
+                                { text: userPrompt },
+                                {
+                                    inlineData: {
+                                        mimeType: mimeType,
+                                        data: base64Image
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    systemInstruction: { parts: [{ text: imageSystemPrompt }] },
+                };
+
+                const urlWithKey = `${apiUrl}?key=${apiKey}`;
+
+                const options = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                };
+
+                // 1. Fetch Data
+                const result = await fetchWithExponentialBackoff(urlWithKey, options);
+                const responseJson = await result.json(); 
+                
+                const responseText = responseJson.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!responseText) {
+                    throw new Error("Could not process the image or no clear health condition was detected.");
+                }
+
+                // 2. Format Results (Simple Markdown rendering of the structured text)
+                resultsDiv.innerHTML = `<div class="p-6 bg-white border border-gray-200 rounded-xl shadow-lg leading-relaxed text-gray-700">
+                                            ${marked.parse(responseText)}
+                                        </div>
+                                        <p class="text-sm text-gray-500 mt-4 text-center italic">
+                                            For best results, upload a clear, well-lit photo focusing on the area of concern.
+                                        </p>`;
+
+            } catch (error) {
+                console.error("Error in analyzeImageForDisease:", error);
+                const errorMessage = error.message.includes('Could not process') 
+                    ? error.message 
+                    : "An unexpected error occurred during analysis. Please check the file type (PNG/JPEG) and try again.";
+                displayMessage(resultsDiv, `🚨 ${errorMessage}`, 'bg-red-100 text-red-700 border-red-300');
+            } finally {
+                // Restore Button State
+                analyzeButton.disabled = false;
+                analyzeButton.innerHTML = 'Analyze Photo for Condition';
+            }
         }
     </script>
+    
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>
